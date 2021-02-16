@@ -83,6 +83,26 @@ group by h.hacker_id, h.name
 having count(*) > 1
 order by count(*) desc, h.hacker_id;
 
+
+with t as (select challenge_id, hacker_id,c.difficulty_level, d.score as full_s
+from challenges c
+join difficulty d
+on c.difficulty_level = d.difficulty_level),
+t2 as (select s.hacker_id, name, s.challenge_id, score, full_s
+from submissions s
+join hackers h
+on s.hacker_id = h.hacker_id
+join t
+on s.challenge_id = t.challenge_id),
+t3 as (select hacker_id, name, count(*) cnt
+from t2
+where score = full_s
+group by hacker_id, name)
+select hacker_id, name
+from t3
+where cnt > 1
+order by cnt desc, hacker_id;
+
 -- Q17: Challenges
 -- https://www.hackerrank.com/challenges/challenges/problem
 -- The main difference between WHERE and HAVING clause comes when used together with GROUP BY clause,
@@ -131,6 +151,16 @@ on t1.fid = s.id
 where t1.msalary < s.salary
 order by s.salary;
 
+select s.name
+from students s
+join friends f
+on s.ID = f.ID
+join packages p
+on s.ID = p.ID
+join packages p2
+on f.friend_id = p2.id
+where p.salary < p2.salary
+order by p2.salary;
 
 -- Q20: Symmetric Pairs
 -- https://www.hackerrank.com/challenges/symmetric-pairs/problem
@@ -151,4 +181,18 @@ from t1
 join t2
 on t1.x = t2.y and t1.y = t2.x
 union (select * from t3);
+
+with t1 as (select X, Y from functions where X < Y),
+t2 as (select X, Y from functions where X > Y),
+t3 as (select X, Y from functions where X = Y),
+t4 as (select X, Y, count(*)cnt from t3 group by X,Y)
+select t1.X, t1.Y
+from t1
+join t2
+on t1.X = t2.Y and t1.Y = t2.X
+union
+select X, Y
+from t4
+where cnt > 1
+order by X;
 

@@ -33,6 +33,10 @@ join ranks r
 on s.score = r.score
 order by r.rank;
 
+select score, dense_rank()over(order by score desc) as rank
+from scores
+order by rank;
+
 -- 180. Consecutive Numbers
 -- https://leetcode.com/problems/consecutive-numbers/
 select distinct l.Num ConsecutiveNums
@@ -67,6 +71,13 @@ select c.name as customers
 from customers c
 where c.id not in (select distinct customerId from orders );
 
+select name as customers
+from customers c
+left join orders o
+on c.id = o.customerID
+where o.customerID is null
+order by name;
+
 -- 184. Department Highest Salary
 -- https://leetcode.com/problems/department-highest-salary/
 with t as (select d.name as Department, e.name as Employee, e.salary, rank() over (partition by  DepartmentId order by salary desc) as rank
@@ -99,6 +110,11 @@ join Weather b
 on a.recordDate - 1 = b.recordDate
 where a.temperature > b.temperature;
 
+with t as (select id, temperature,lag(temperature) over (order by id) as lag_temp
+from weather)
+select id
+from t
+where temperature > lag_temp;
 
 ## 262. Trips and Users
 
@@ -122,6 +138,16 @@ from t
 group by Request_at, status
 having status = 'completed') t2
 on t1.Request_at = t2.Request_at;
+
+with t as (select ID, Client_ID, Driver_ID, CITY_ID, Status, Request_at, case status
+when 'completed' then 1 else 0 end as complete
+from trips)
+select request_at as Day, round((1-sum(complete) / count(*)), 2) as "Cancellation Rate"
+from t
+where (client_Id not in (select users_id from users where banned = 'Yes'))
+and (driver_id not in (select users_id from users where banned = 'Yes'))
+group by request_at
+order by request_at;
 
 
 
