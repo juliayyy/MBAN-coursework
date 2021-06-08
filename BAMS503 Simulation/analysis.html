@@ -1,0 +1,19 @@
+<br/>
+
+<h3>Result Analysis</h3>
+<p>For clinic operation, though, the ideal scenario is to maximize profit, minimize average waiting time (scheduled and walkins) and doctor’s overtime simultaneously; it is not practical in real life. Usually a clinic would focus on one aspect more than the others. Here based on the analysis of the results from 1000 replication of all possible (45) combinations of salary and schedule intervals, we investigate the strategies that would work best for 3 different operational focus: </p>
+
+<h4>1. Maximizing Profit</h4>
+<p>From the scatter plot we learned that the current system can generate up to about 104k profit from the combination of (Salary:$60 + Interval: 20 mins), and if the prime target of a clinic is to maximize daily profit ( >= $90,000), then it needs to set the interval as short as possible (20 to 30 mins). </p>
+<p>However, such strategy sacrifices customer waiting time and total working time of the doctor, resulting in poor customer experience and doctor’s physical and mental health. So, to mitigate the long waiting-time problem, the clinic can choose to hire a proficient doctor (with $140 /hour salary), who can have shorter service time and thus help maintain customer service level. </p>
+
+<h4>2. Minimizing Customer Wait Time</h4>
+<p>Suppose the clinic is customer service oriented with a prime target of < 5 mins average waiting time for scheduled clients and < 30 mins average waiting time for walk-ins, then the clinic can have several combinations to choose from. By studying the result table and plot we recommend the combination of Salary:$120 + Interval: 45 mins as it may bring a relatively high profit ($62k) while results in shorter doctor overtime (about 16 mins ) compared with other candidates. </p>
+
+<h4>3. Optimizing doctor’s wellness </h4>
+<p>Suppose the clinic is customer service oriented with a prime target of <5 mins average waiting time for scheduled clients and < 30 mins average waiting time for walk-ins, then the clinic can have several combinations to choose from. By studying the result table and plot we recommend the combination of Salary:$120 + Interval: 45 mins as it may bring a relatively high profit ($62k) while results in shorter doctor overtime (about 16 mins ) compared with other candidates.</p>
+
+<h3>Conclusion</h3>
+<p>Through a single day operation simulation and a series Monte Carlo simulations that replicate a single day for 1000 times for all possible 45 salary and schedule interval combinations, we provide clinic managers a very powerful tool to combat uncertainties while making decisions for an experienced situation. </p>
+
+<p>Based on the results from simulation plots, tables and sensitivity analysis, in general we recommend managers to search and compare feasible solutions in the elbow areas: hire proficient doctors with higher salaries ($100 - $140) and set a medium schedule interval at about 35 - 45 mins. So that the clinic is run in an efficient and balanced way, being able to keep service quality, flexibility dealing with walk-ins, while keeping at a decent profit level. This will enable the clinic to maintain a sustainable operation in the long run. </p>

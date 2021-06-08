@@ -1,0 +1,49 @@
+<br/>
+
+<h3>Introduction</h3>
+<p>We hypothetically constructed a clinic that provides two types of services: eye examination (does not need reservation) and cataract surgery services (needs reservation). Now the clinic operates from Monday to Saturday. To cater to greater market demand, the clinic's manager has been considering Sunday operations.</p>
+
+<p>However, before hitting the ground and running, the manager needs to make two decisions: </p>
+
+<p>1. Within the 10 hours operating time, how long should the schedule interval be between clients?  </p>
+<p>2. What kind of doctor (of different salary level) should the clinic hire to fit in the role? </p>
+
+<p>Here, the manager faces a dilemma between ‘too much and too little’: intuitively, shorter schedule intervals allow more client take-in, which means higher profit potential. But it may also lead to long customer waiting time and doctor overtime. On the flip side, longer schedule intervals may ensure clients get served as scheduled, but may cause doctor idle between clients and low profit. </p>
+
+<p>Similarly, on one hand, a proficient doctor (with high salary) may bring more profit as they can deal with more clients within a day with shorter service time, but on the other hand, the relatively high overtime cost may offset such benefit. </p>
+
+<p>To facilitate the manager’s decision making, we built this Shiny app, which allows managers to try out different combinations of schedule intervals (mins) and doctor’s hourly salary. The tool will simulate the clinic’s typical day operation and provide the key performance metrics: profit, average waiting time (scheduled and walkins) and doctor’s overtime based on different decisions. </p>
+
+<h3>Modeling Approach</h3>
+<p>To simulate the key performance indexes (KPIs: Profit, Average Waiting Time (both scheduled and walk-ins) and Doctor’s Overtime) of the clinic, we adopted a two-step approach: </p>
+
+<h4>Step One: To simulate the KPIs from a single-day operation - (Simulation Tab);</h4>
+<p>Basic logics of step one include: the daily operation is in a stochastic process with four critical times of each client (both scheduled and walkins): arrival time, waiting time, service time and leaving time. Among which: arrival time and service time are random variables, waiting time and leaving time are calculated results from two basic equations: </p>
+
+<p> waiting time = max ( (previous client’s leaving time - current client’s arrival time), 0) </p>
+<p> leaving time = arrival time + waiting time + service time. </p>
+
+<h4>Step Two: To replicate Step One for 1000 times and get the average KPIs.(Simulation Tab) </h4>
+
+<p> Randomness creates uncertainty of a single day operation. Considering the randomness scope of arrival time and service time are related to clinic’s self decided service interval and doctor salary (see assumption), in step two, we added a layer on top of step one function: each input combination of service interval and doctor salary generates a vector of random arrival time and a vector of random service time  (for both scheduled and walkins). We used  these vectors to invoke the step one function to simulate KPIs of a single day operation. The processes are then replicated for 1000 times, to mitigate the impact of uncertainty.</p>
+
+<h3>Assumptions</h3>
+
+<h4>Operational Assumptions</h4>
+
+<p>1. The clinic schedules appointments in advance, and clients are expected to come at about the scheduled time. </p>
+<p>2. The clinic will operate from 10:00 am until 8:00 pm, a total of 10 hours. </p>
+<p>3. There is only one doctor in the clinic. </p>
+<p>4. There are two kinds of services: Eye surgery - need schedule - the price = $5000 , Eye - Exam  - Walk In  - price is $500. </p>
+<p>5. Since 10 hours regular working time approaches the upper limit that a doctor can endure, for every extra one minute overtime, the clinic would pool a 1.5hour leave-with-pay for the doctor per clinic policy. </p>
+<p>6. Number of clients cheduled= 60*10/ (length of schedule interval (mins)).</p>
+<p>7. All scheduled clients will show up, and no client will actually leave because of long waiting time.</p>
+<p>8. Calculations for mean service time for both walk-in and scheduled clients are based on the given hourly pay rate for the doctor, from a formula which we think is reasonable: the higher the doctor's salary, the less time he takes to serve a client.
+ mean scheduled service time = (200-8* sqrt(doctor.salary))/4; 
+ mean walk in service time = (200-8*sqrt(doctor.salary))/8</p>
+
+<h4>Random Variable Distributions</h4>
+<p>1. Gamma distribution is assumed for modeling arrival times (scheduled client) and service times (both scheduled and walkins). Because usually the scheduled clients arrive around the scheduled time slots,  and service time by the same doctor of the same type of services are about similar length. Such distributions are similar to normal distributions. Since both time lengths are always positive numbers, we use gamma distribution to  model the elapsed time before two consecutive events. </p>
+<p>2. Exponential distribution is assumed for modeling walk-in clients’ arrival time because theoretically, exponential distribution measures the amount of time(from the beginning) until one event occurs, the distribution best simulates the randomness of walk-in arrivals. And in the project, we assumed 120 mins as the mean of the exp distrbution based on pseudo-historical data</p>
+
+
